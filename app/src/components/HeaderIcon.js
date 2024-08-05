@@ -41,9 +41,17 @@ var oscheck = Platform.OS;
 const HeaderTitle = () => {
   return (
     // <View  style={{ width:75*vw,flex:1, justifyContent:'center', backgroundColor:'red', alignItems:'flex-start', padding:2}}>
-    <View style={{
-      height, width, flexDirection: 'row', justifyContent: 'flex-start', alignItems: 'center', flex: 1,
-    }}
+    // <View style={{
+    // height, width, 
+    //   flexDirection: 'row', justifyContent: 'flex-start', alignItems: 'center', flex: 1, 
+    // }}
+    <View
+      style={{
+        flexDirection: 'row',
+        justifyContent: 'flex-start',
+        alignItems: 'center',
+        ...(Platform.OS === 'ios' ? { height, width } : { flex: 1 }),
+      }}
     // style={{
     //   flexDirection: 'row',
     //   justifyContent: 'flex-start',
