@@ -1,0 +1,6 @@
+module Pods_dashboard_tvOS {
+  umbrella header "Pods-dashboard-tvOS-umbrella.h"
+
+  export *
+  module * { export * }
+}

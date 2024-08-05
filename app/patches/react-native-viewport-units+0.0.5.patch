@@ -1,0 +1,16 @@
+diff --git a/node_modules/react-native-viewport-units/viewport-units.js b/node_modules/react-native-viewport-units/viewport-units.js
+index 53c5c1a..7806439 100644
+--- a/node_modules/react-native-viewport-units/viewport-units.js
++++ b/node_modules/react-native-viewport-units/viewport-units.js
+@@ -1,8 +1,6 @@
+ 'use strict';
+ 
+-var React = require('react-native')
+-  , Dimensions = React.Dimensions || require('Dimensions')
+-  , {width, height} = Dimensions.get('window');
+
++var React = require('react-native'); var { Dimensions } = React; var {width, height} = Dimensions.get('window');
+ 
+ var units = {
+   vw: width/100
+ }

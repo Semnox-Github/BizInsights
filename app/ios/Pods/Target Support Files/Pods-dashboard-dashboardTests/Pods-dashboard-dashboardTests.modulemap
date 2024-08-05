@@ -1,0 +1,6 @@
+module Pods_dashboard_dashboardTests {
+  umbrella header "Pods-dashboard-dashboardTests-umbrella.h"
+
+  export *
+  module * { export * }
+}
