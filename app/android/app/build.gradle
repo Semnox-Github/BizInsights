@@ -141,11 +141,11 @@ android {
     }
 
     defaultConfig {
-        applicationId "com.semnox.analyticsdashboardapplite"
+        applicationId "com.semnox.analyticsdashboardapp"
         minSdkVersion rootProject.ext.minSdkVersion
         targetSdkVersion rootProject.ext.targetSdkVersion
-        versionCode 2155104
-        versionName "2.152.0.1"
+        versionCode 2155114
+        versionName "2.152.0"
         multiDexEnabled true
 
     }

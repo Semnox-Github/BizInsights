@@ -1,0 +1,16 @@
+{
+	"ParafaitCentralUrlHost": "https://parafaitios.parafait.com",
+	"APP_ID": "com.semnoxsolutions.dashboard",
+	"VERSION": "2.140.1",
+	"APP_NAME": "bizinsightliteqa",
+	"ASSETS_PATH": "../assets/bizinsightlite",
+	"MYAPP_RELEASE_STORE_FILE": "bizlite-upload-key.keystore",
+	"MYAPP_RELEASE_KEY_ALIAS": "bizlite-key-alias",
+	"MYAPP_RELEASE_STORE_PASSWORD": "bizlite",
+	"MYAPP_RELEASE_KEY_PASSWORD": "bizlite",
+	"VERSION_CODE": 2155049,
+	"VERSION_NAME": "2.150.3.2",
+	"PLAY_STORE_URL": "https://play.google.com/store/apps/details?id=com.semnox.analyticsdashboardapplite",
+	"APP_STORE_URL": "https://itunes.apple.com/app/id1547246277",
+	"ISTABLEUDASHBOARD": "false"
+}

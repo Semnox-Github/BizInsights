@@ -1,0 +1,18 @@
+{
+	"ParafaitCentralUrlHost": "https://smartfunapp.parafait.com",
+	"Origin": "+MbQeThWmZq4t7w!z%C*F-J@NcRfUjXn",
+	"APP_ID": "com.semnox.analyticsdashboardapplite",
+	"VERSION": "2.130.9",
+	"SECURITY_CODE": "ABCF1236",
+	"APP_NAME": "bizinsightlite",
+	"ASSETS_PATH": "../assets/bizinsightlite",
+	"MYAPP_RELEASE_STORE_FILE": "bizlite-upload-key.keystore",
+	"MYAPP_RELEASE_KEY_ALIAS": "bizlite-key-alias",
+	"MYAPP_RELEASE_STORE_PASSWORD": "bizlite",
+	"MYAPP_RELEASE_KEY_PASSWORD": "bizlite",
+	"VERSION_CODE": 2155113,
+	"VERSION_NAME": "2.152.0.1",
+	"PLAY_STORE_URL": "https://play.google.com/store/apps/details?id=com.semnox.analyticsdashboardapplite",
+	"APP_STORE_URL": "https://itunes.apple.com/app/id1547246277",
+	"ISTABLEUDASHBOARD": "false"
+}
