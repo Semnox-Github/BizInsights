@@ -173,3 +173,6 @@ export const USER_REGISTER = 'api/ClientApp/ClientAppUser/Register';
 export const LOGIN_USER = 'api/ClientApp/ClientAppUser/Login';
 
 export const GET_USER_ROLE = 'api/HR/Users';
+
+export const RSA_KEY_GENERATE = '/Login/PublicKey';
+

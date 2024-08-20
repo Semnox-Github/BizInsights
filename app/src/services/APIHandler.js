@@ -149,6 +149,7 @@ function request(params, sendLogs = true) {
   } else body = JSON.stringify(params.data);
 
   var url = GenericMethods.buildURL([host, params.url + qs]);
+  console.log('@@@@@@@@@@', url);
 
   // if (method === "GET" && !GenericMethods.IsUndefined(hashParam)) {
   //   return GenericMethods.cryptoES(hashParam)

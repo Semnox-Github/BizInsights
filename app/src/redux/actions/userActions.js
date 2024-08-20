@@ -32,6 +32,12 @@ export function intialSetUp(deviceGUID, clientDTO, gatewayURL) {
     dispatch(authenticateUser(userId, password));
   };
 }
+// export function RSAandAESkeyGeneration(appname, identifier, version, SiteId) {
+//   return (dispatch, getState) => {
+
+
+//   }
+// }
 
 export function authenticateUser(loginId, password) {
   return (dispatch, getState) => {
@@ -40,7 +46,8 @@ export function authenticateUser(loginId, password) {
       Password: password,
     };
 
-    dispatch({ type: types.SYSTEM_USER_DETAILS_REQUEST });
+
+    dispatch({ type: types.SYSTEM_USER_DETAILS_REQUEST }); // to invoke all  simalr func
     ServiceHandler.post({
       url: Constants.SYSTEM_USER,
       data,

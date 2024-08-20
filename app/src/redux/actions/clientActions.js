@@ -25,6 +25,13 @@ export const getClientDetail = (userId, password, securitycode) => {
       currenntTime,
     );
 
+    console.log('hashedVal', hashedVal)
+    console.log('queryParameters', appId, releaseNumber, currenntTime)
+    console.log('secureitycode', securityCode)
+
+
+
+
 
     dispatch({ type: types.FETCH_CLIENT_DETAILS_REQUEST });
 
@@ -56,7 +63,7 @@ export const getClientDetail = (userId, password, securitycode) => {
               ),
             );
           } else {
-            // console.log('error123', response);
+            console.log('error123', response);
 
             dispatch({
               type: types.FETCH_CLIENT_DETAILS_FAILURE,
@@ -66,13 +73,83 @@ export const getClientDetail = (userId, password, securitycode) => {
             });
           }
         } catch (error) {
-          //console.log('error12', error);
+          console.log('error12', error);
           dispatch({ type: types.FETCH_CLIENT_DETAILS_FAILURE, payload: error });
         }
       })
       .catch((error) => {
-        // console.log('error2', error);
+        console.log('error2', error);
         dispatch({ type: types.FETCH_CLIENT_DETAILS_FAILURE, payload: error });
+      });
+  };
+};
+
+export const RSAandAESkeyGeneration = (appname, identifier, version) => {
+  return (dispatch, getState) => {
+    console.log('cehckingRSA');
+
+    // var securityCode = securitycode.slice(-2);
+    // const appId = config.APP_ID;
+    // const releaseNumber = config.VERSION;
+
+    // const currenntTime = generateDate();
+    // const hashedVal = generateHashCode(
+    //   appId,
+    //   securitycode,
+    //   currenntTime,
+    // );
+
+
+    dispatch({ type: types.FETCH_RSA_AND_AES_ENCRIPTION });
+
+    ServiceHandler.post({
+      url: Constants.RSA_KEY_GENERATE,
+      headers: {
+        queryParameters: {
+          // siteId: SiteId,
+          application: appname,
+          version: version,
+          identifier: identifier,
+          format: 'PEM'
+        },
+      },
+      // data: { codeHash: hashedVal },
+      // timeout: ParafaitServer.DEFAULT_TIMEOUT,
+    })
+      .then((response) => {
+        try {
+          if (response instanceof Error) throw response;
+          if (response.statusCode === 200) {
+            console.log('CheckResponseRSA', response);
+
+            //console.log('finalValidationCode', securitycode);
+            // asyncStorageHandler.setItem(Constants.SET_SHOW_VERIFICATION_CODE, securitycode)
+            // dispatch(
+            //   setClientData(
+            //     new ClientAppVersionMappingDTO(response.data),
+            //     userId,
+            //     password,
+            //     securitycode,
+            //   ),
+            // );
+          } else {
+            console.log('error134', response);
+
+            dispatch({
+              type: types.FETCH_RSA_AND_AES_ENCRIPTION_FAILER,
+              payload: new Error(
+                response?.data || Constants.UNKNOWN_ERROR_MESSAGE,
+              ),
+            });
+          }
+        } catch (error) {
+          console.log('error13', error);
+          dispatch({ type: types.FETCH_RSA_AND_AES_ENCRIPTION_FAILER, payload: error });
+        }
+      })
+      .catch((error) => {
+        console.log('error132', error);
+        dispatch({ type: types.FETCH_RSA_AND_AES_ENCRIPTION_FAILER, payload: error });
       });
   };
 };

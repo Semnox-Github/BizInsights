@@ -9,6 +9,7 @@ import {
   Linking,
 } from 'react-native';
 import { getClientDetail } from '../redux/actions/clientActions';
+import { RSAandAESkeyGeneration } from '../redux/actions/clientActions';
 import { authenticateUser, intialSetUp } from '../redux/actions/userActions';
 import { handleError } from '../redux/actions/clearErrorActions';
 import { connect } from 'react-redux';
@@ -24,8 +25,14 @@ import * as GenericMethods from '../common/index';
 import * as types from '../redux/actions/types';
 import NavigationService from '../lib/NavigationService';
 import { log } from 'react-native-reanimated';
+import DeviceInfo from 'react-native-device-info';
+
+
+const parafaitConfigJson = require('./../../parafait.config.json');
+console.log('appName2', parafaitConfigJson.APP_NAME);
 
 var asyncStorageHandler = new AsyncStorageHanlder();
+var deviceIdentifier = DeviceInfo.getUniqueId()
 
 class RegestrationScreen extends Component {
   static navigationOptions = {
@@ -37,6 +44,7 @@ class RegestrationScreen extends Component {
   };
 
   state = {
+
     loginId: '',
     password: '',
     verificationCode: '',
@@ -46,6 +54,9 @@ class RegestrationScreen extends Component {
     gatewayURL: {},
     isMounted: true,
     clientDTO: {},
+    appName: parafaitConfigJson.APP_NAME,
+    deviceIdentifier: deviceIdentifier,
+    appVersion: parafaitConfigJson.VERSION_NAME
   };
 
   onchangeLoginId = (loginId) => {
@@ -109,16 +120,19 @@ class RegestrationScreen extends Component {
       if (
         Object.keys(this.props.clientGateway).length === 0 &&
         this.props.clientGateway.constructor === Object
-      ) {
+      )//Regiter flow 
+      {
+
+
         this.props.getClientDetail(
           this.state.loginId,
           this.state.password,
           this.state.verificationCode,
           asyncStorageHandler.setItem(Constants.SET_SHOW_VERIFICATION_CODE, this.state.verificationCode),
-
           // console.log('getClientDetailVerfication', this.state.verificationCode)
         );
       } else {
+        //login flow
         //console.log('helloHere');
         this.props.authenticateUser(this.state.loginId, this.state.password);
       }
@@ -281,19 +295,25 @@ class RegestrationScreen extends Component {
   //handle update
 
   componentDidMount() {
+    console.log('helloREG');
+    console.log('appname', this.state.appName, this.state.deviceIdentifier, this.state.appVersion);
+
     //added by shobith
+    this.props.RSAandAESkeyGeneration(
+      this.state.appName, this.state.deviceIdentifier, this.state.appVersion,
+      // other parameters
+    );
+
+
     asyncStorageHandler.getItem(Constants.SET_SHOW_VERIFICATION_CODE)
       .then((code) => {
         if (code != null) {
           this.setState({
             showVerificationCode: code,
             verificationCode: code
-
           })
 
         }
-
-
         // console.log('securecodechcek', code);
       })
     asyncStorageHandler
@@ -415,6 +435,7 @@ const mapStateToProps = (state) => {
 };
 
 export default connect(mapStateToProps, {
+  RSAandAESkeyGeneration,
   getClientDetail,
   handleError,
   authenticateUser,
