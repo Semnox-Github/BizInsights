@@ -39,8 +39,8 @@ package-lock.json
 # BUCK
 buck-out/
 \.buckd/
-*.keystore
-!debug.keystore
+#*.keystore
+#!debug.keystore
 /android/app/src/main/res
 
 # fastlane
@@ -61,5 +61,5 @@ buck-out/
 /ios/Pods/
 /ios/Podfile.lock
 src/assets/data
-parafait.config.json
+#parafait.config.json
 *.hprof
