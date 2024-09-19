@@ -10,7 +10,7 @@
 	"MYAPP_RELEASE_KEY_ALIAS": "dashboard-key-alias",
 	"MYAPP_RELEASE_STORE_PASSWORD": "dashboard",
 	"MYAPP_RELEASE_KEY_PASSWORD": "dashboard",
-	"VERSION_CODE": 2155112,
+	"VERSION_CODE": 2155117,
 	"VERSION_NAME": "2.130.10.1",
 	"PLAY_STORE_URL": "https://play.google.com/store/apps/details?id=com.semnox.analyticsdashboardapp",
 	"APP_STORE_URL": "https://itunes.apple.com/app/id1547246277",
