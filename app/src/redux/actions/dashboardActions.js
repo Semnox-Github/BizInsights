@@ -19,6 +19,8 @@ const tabData = isTableauDashboard
   : { queryParameters: { dashboardType: 'R' } };
 
 export const getSalesDashboard = (userRoleId) => {
+
+
   // console.log('user role id ***', userRoleId);
   return (dispatch, getState) =>
     // dispatch({type: types.FETCH_SALES_DASHBOARD_REQUEST});
@@ -30,6 +32,17 @@ export const getSalesDashboard = (userRoleId) => {
     })
       .then((response) => {
         try {
+          //   console.log('store.getState().client.isVerificationCodeChange', store.getState().client.isVerificationCodeChanged);
+
+          if (store.getState().client.isVerificationCodeChanged) {
+            dispatch({
+              type: types.CLEAR_DASHBOARD_DATA,
+              payload: {},
+            })
+            asyncStorageHandler.setItem(Constants.LOAD_STORED_DATA, null);
+            dispatch({ type: types.IS_VERIFICATION_CODE_CHANGED, payload: false });
+
+          }
           // console.log('statusSalescheck', response);
           if (response instanceof Error) throw response;
           if (response.statusCode === 200) {
@@ -70,6 +83,8 @@ export const getSalesDashboard = (userRoleId) => {
                       type: types.FETCH_CURRENT_DATE,
                       payload: currentDate,
                     });
+                    //check below
+
                     dispatch({
                       type: types.FETCH_TOTAL_COLLECTION,
                       payload: totalCollection,

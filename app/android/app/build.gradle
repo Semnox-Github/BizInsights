@@ -144,8 +144,8 @@ android {
         applicationId "com.semnox.analyticsdashboardapp"
         minSdkVersion rootProject.ext.minSdkVersion
         targetSdkVersion rootProject.ext.targetSdkVersion
-        versionCode 2155117
-        versionName "2.130.10.1"
+        versionCode 2155123
+        versionName "2.152.2"
         multiDexEnabled true
 
     }

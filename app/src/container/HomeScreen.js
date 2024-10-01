@@ -188,10 +188,14 @@ class HomeScreen extends Component {
         showWebView: false,
       });
       this.props.getSalesDashboard(this.props.userRoleId);
+
+
     }
   };
 
   onRefresh = () => {
+    console.log('refreshcehck');
+
     this.setState({
       refreshing: true,
     });
@@ -265,6 +269,22 @@ class HomeScreen extends Component {
       selectedSite: null,
       isTableauDashboard: isTableauDashboard,
       appState: AppState.currentState,
+
+      decimalScale: '',
+      decimalSeparator: '',
+      thousandSeparator: '',
+      currencySymbol: '',
+      siteList: [],
+      siteId: -1,
+      currentDate: '',
+      todayCollectionList: [],
+      weeklyCollectionList: [],
+      collectionToday: 0,
+      collectionWeek: 0,
+      gamePlayToday: 0,
+      gamePlayWeek: 0,
+      usePropData: false,
+      refreshIntervalId: null,
       width: Dimensions.get('window').width
     };
   }
@@ -275,6 +295,8 @@ class HomeScreen extends Component {
       nextAppState === 'active'
     ) {
       this.props.getSalesDashboard(this.props.userRoleId);
+      this.saveDashboardData()
+
     }
     if (this._isMounted) {
       this.setState({ appState: nextAppState });
@@ -282,6 +304,8 @@ class HomeScreen extends Component {
   };
 
   componentDidMount() {
+    this.setupRefreshInterval();
+    this.loadStoredData();
 
     this._isMounted = true;
     AppState.addEventListener('change', this.handleAppChange);
@@ -303,12 +327,19 @@ class HomeScreen extends Component {
       this.props.getBusinessStartTime();
       this.props.asyncRequest();
       this.props.getSalesDashboard(this.props.userRoleId);
+
+
+
     } else {
       this.setState({
         dashboard: this.props.dashboard,
       });
       this.props.getBusinessStartTime((showLoader = false));
       this.props.getSalesDashboard(this.props.userRoleId);
+      this.saveDashboardData()
+
+
+
       this.props.selectedDashboardDetails(
         this.props.dashboard[0].ReportId,
         this.props.dashboard[0].DBQuery,
@@ -360,6 +391,11 @@ class HomeScreen extends Component {
 
   componentWillUnmount() {
     // console.log('Hii');
+    const { refreshIntervalId } = this.state;
+    if (refreshIntervalId) {
+      clearInterval(refreshIntervalId);
+    }
+
     this._isMounted = false;
     AppState.removeEventListener('change', this.handleAppChange);
 
@@ -369,6 +405,7 @@ class HomeScreen extends Component {
   }
 
   componentDidUpdate(prevProps, prevState, snapshot) {
+
     if (
       this.state.selectedId != this.props?.reportId ||
       this.state.dashboard.length != this.props.dashboard.length
@@ -380,6 +417,21 @@ class HomeScreen extends Component {
       });
     }
   }
+  setupRefreshInterval = () => {
+    const { refreshFrequency } = this.props;
+    const intervalInMinutes = refreshFrequency > 0 ? refreshFrequency : 10; // Use 10 minutes as default
+    const intervalInMilliseconds = intervalInMinutes * 60 * 1000; // Convert minutes to milliseconds
+    this.setState({
+      refreshIntervalId: setInterval(() => {
+        this.props.asyncRequest();
+        this.props.getSalesDashboard(this.props.userRoleId);
+        this.saveDashboardData()
+
+
+
+      }, intervalInMilliseconds)
+    });
+  };
 
   handleRestart = () => {
     this.props.handleError();
@@ -397,6 +449,10 @@ class HomeScreen extends Component {
   renderLoader = () => {
     if (this.props?.loading && !this.state?.refreshing) {
       // return <Loader isLoading={true} fullScreen={true} />
+      this.saveDashboardData()
+
+      console.log('loadercehck');
+
       return (
         <Progress.Bar
           indeterminate={true}
@@ -476,6 +532,107 @@ class HomeScreen extends Component {
     }
   };
 
+  loadStoredData = async () => {
+    try {
+      console.log('Entering loadStoredData');
+
+      const storedData = await asyncStorageHandler.getItem(Constants.LOAD_STORED_DATA);
+      console.log('storedData:', storedData);
+      console.log('typeof storedData:', typeof storedData);
+
+      if (storedData === null || storedData === undefined) {
+        // this.setState({
+        //   usePropData: true
+        // })
+        console.log('No valid stored data found using propdata');
+
+      }
+      else if (typeof storedData === 'object') {
+        console.log('Stored Data is already an object:', storedData);
+
+        console.log('decimalsepeerator:', storedData.collectionToday);
+        console.log('propdata:', this.state.usePropData);
+
+
+        // Ensure decimalSeparator and thousandSeparator are different
+        // let decimalSeparator = storedData.decimalSeparator || '.';
+        // let thousandSeparator = storedData.thousandSeparator || ',';
+
+        // if (decimalSeparator === thousandSeparator) {
+        //   // If they're the same, change one of them
+        //   if (decimalSeparator === ',') {
+        //     decimalSeparator = '.';
+        //   } else {
+        //     thousandSeparator = '.';
+        //   }
+        // }
+
+        // Update state with default values if properties don't exist
+        this.setState({
+          decimalScale: storedData.decimalScale,
+          // decimalSeparator: decimalSeparator,
+          // thousandSeparator: thousandSeparator,
+          currencySymbol: storedData.currencySymbol || '',
+          siteList: storedData.siteList || [],
+          siteId: storedData.siteId !== null ? storedData.siteId : -1,
+          currentDate: storedData.currentDate || '',
+          todayCollectionList: storedData.todayCollectionList || [],
+          weeklyCollectionList: storedData.weeklyCollectionList || [],
+          collectionToday: storedData.collectionToday || 0,
+          collectionWeek: storedData.collectionWeek || 0,
+          gamePlayToday: storedData.gamePlayToday || 0,
+          gamePlayWeek: storedData.gamePlayWeek || 0,
+        });
+        // this.setState({
+        //   usePropData: true
+        // })
+        // // Verify types after processing
+        // console.log('Type of decimalSeparator after processing:', typeof decimalSeparator);
+        // console.log('Type of thousandSeparator after processing:', typeof thousandSeparator);
+        // this.setState({
+        //   usePropData: true
+        // })
+      } else {
+        // this.setState({
+        //   usePropData: true
+        // })
+        console.error('Unexpected type of storedData:', typeof storedData);
+        console.log('Stored Data:', storedData); // Log the unexpected data for debugging
+      }
+      this.setState({
+        usePropData: true
+      })
+    } catch (error) {
+      console.error('Error loading stored data:', error);
+    }
+  };
+
+  saveDashboardData = async () => {
+    try {
+      console.log('this.props.totalCollection.collectionToday', this.props.totalCollection);
+
+      const dashboardData = {
+        currentDate: this.props.currentDate,
+        todayCollectionList: this.props.todayCollectionList,
+        weeklyCollectionList: this.props.weeklyCollectionList,
+        siteList: this.props.siteList,
+        siteId: this.props.siteId,
+        collectionToday: this.props.totalCollection?.CollectionToday,
+        collectionWeek: this.props.totalCollection?.CollectionWeek,
+        gamePlayToday: this.props.totalCollection?.GamePlayToday,
+        gamePlayWeek: this.props.totalCollection?.GamePlayWeek,
+        decimalSeparator: this.props.decimalSeparator,
+        thousandSeparator: this.props.thousandSeparator,
+        currencySymbol: this.props.currencySymbol,
+      };
+
+
+      await asyncStorageHandler.setItem(Constants.LOAD_STORED_DATA, JSON.stringify(dashboardData));
+    } catch (error) {
+      console.error('Error saving dashboard data:', error);
+    }
+  };
+
   onTodayLayoutPress = () => {
     {
       this.setState({
@@ -499,9 +656,15 @@ class HomeScreen extends Component {
     } = this.props?.totalCollection;
     const { thousandSeparator, decimalSeparator, decimalScale } = this.props;
     //console.log('response *****', this.props.userRoleId);
-    //console.log('webURI', this.props.webview);
+    console.log('thousandSeparator123', this.state.usePropData);
+    console.log('CollectionTodayPROP', CollectionToday);
+    console.log('CollectionTodaySTATE', this.state.collectionToday);
+    console.log('showConsumptionPROPS', this.props.showConsumption);
+    console.log('refreshFrequencyPROPS', this.props.refreshFrequency);
+
 
     return (
+
       <View
         style={{
           backgroundColor: '#fff',
@@ -528,6 +691,7 @@ class HomeScreen extends Component {
         </View>
         <View style={{ flex: 1 }}>
           {this.renderLoader()}
+          <Loader isLoading={Object.keys(this.props?.totalCollection).length === 0 ? true : false} fullScreen={true} />
           <ScrollView
             scrollEnabled={false}
             nestedScrollEnabled
@@ -592,6 +756,8 @@ class HomeScreen extends Component {
                     onPress={() => {
                       this.props.asyncRequest();
                       this.props.getSalesDashboard(this.props.userRoleId);
+                      this.saveDashboardData()
+
                     }}
                     name="refresh-circle"
                     size={vw * 9}
@@ -651,24 +817,26 @@ class HomeScreen extends Component {
                     padding: 5,
                   }}>
                   <DashboardActivityCard
-                    decimalScale={decimalScale}
+                    showConsumption={this.props.showConsumption}
+                    decimalScale={(this.state.usePropData) ? decimalScale : this.state.decimalScale}
                     thousandSeparator={thousandSeparator}
                     decimalSeparator={decimalSeparator}
-                    currencySymbol={this.props.currencySymbol || '$'}
-                    collectionAmt={CollectionToday}
-                    consumptionAmt={GamePlayToday}
+                    currencySymbol={(this.state.usePropData) ? this.props.currencySymbol || '$' : this.state.currencySymbol || '$'}
+                    collectionAmt={(this.state.usePropData) ? CollectionToday : this.state.collectionToday}
+                    consumptionAmt={(this.state.usePropData) ? GamePlayToday : this.state.gamePlayToday}
                     collectionText={Constants.COLLECTION}
                     consumptionText={Constants.CONSUMPTION}
                     cardTitle={Constants.TODAY}
                     onPress={this.onTodayLayoutPress}
                   />
                   <DashboardActivityCard
-                    decimalScale={decimalScale}
-                    thousandSeparator={thousandSeparator}
-                    decimalSeparator={decimalSeparator}
-                    currencySymbol={this.props.currencySymbol || '$'}
-                    collectionAmt={CollectionWeek}
-                    consumptionAmt={GamePlayWeek}
+                    showConsumption={this.props.showConsumption}
+                    decimalScale={(this.state.usePropData) ? decimalScale : this.state.decimalScale}
+                    thousandSeparator={this.props?.thousandSeparator}
+                    decimalSeparator={this.props?.decimalSeparator}
+                    currencySymbol={(this.state.usePropData) ? this.props.currencySymbol || '$' : this.state.currencySymbol || '$'}
+                    collectionAmt={(this.state.usePropData) ? CollectionWeek : this.state.collectionWeek}
+                    consumptionAmt={(this.state.usePropData) ? GamePlayWeek : this.state.gamePlayWeek}
                     collectionText={Constants.COLLECTION}
                     consumptionText={Constants.CONSUMPTION}
                     cardTitle={Constants.WEEK}
@@ -678,11 +846,12 @@ class HomeScreen extends Component {
               </View>
             ) : this.state.showTodayReport ? (
               <DashboardCollection
-                decimalScale={decimalScale}
+                showConsumption={this.props.showConsumption}
+                decimalScale={(this.state.usePropData) ? decimalScale : this.state.decimalScale}
                 thousandSeparator={thousandSeparator}
                 decimalSeparator={decimalSeparator}
-                currencySymbol={this.props.currencySymbol || '$'}
-                siteList={this.props.todayCollectionList}
+                currencySymbol={(this.state.usePropData) ? this.props.currencySymbol || '$' : this.state.currencySymbol || '$'}
+                siteList={(this.state.usePropData) ? this.props.todayCollectionList : this.state.todayCollectionList}
                 onPress={this.onPressSite}
                 siteId={this.state.selectedSite}
                 pastCollectionText={Constants.YESTERDAY}
@@ -690,11 +859,12 @@ class HomeScreen extends Component {
               />
             ) : this.state.showWeekReport ? (
               <DashboardCollection
-                decimalScale={decimalScale}
+                showConsumption={this.props.showConsumption}
+                decimalScale={(this.state.usePropData) ? decimalScale : this.state.decimalScale}
                 thousandSeparator={thousandSeparator}
                 decimalSeparator={decimalSeparator}
-                currencySymbol={this.props.currencySymbol || '$'}
-                siteList={this.props.weeklyCollectionList}
+                currencySymbol={(this.state.usePropData) ? this.props.currencySymbol || '$' : this.state.currencySymbol || '$'}
+                siteList={(this.state.usePropData) ? this.props.weeklyCollectionList : this.state.weeklyCollectionList}
                 onPress={this.onPressSite}
                 siteId={this.state.selectedSite}
                 pastCollectionText={Constants.LAST_WEEK}
@@ -727,6 +897,7 @@ const mapStateToProps = (state) => {
     clientDTO: state.client.clientDTO,
     deprecated: state.client.deprecated,
     updateRequired: state.dashboard.updateDashboard,
+
     totalCollection: state.dashboard.totalCollection,
     siteList: state.dashboard.siteList,
     currentDate: state.dashboard.currentDate,
@@ -736,7 +907,10 @@ const mapStateToProps = (state) => {
     thousandSeparator: state.user.defaultConfig.thousandSeparator,
     decimalSeparator: state.user.defaultConfig.decimalSeparator,
     decimalScale: state.user.defaultConfig.decimalScale,
+
     userRoleId: state.user.userRoleId,
+    showConsumption: state.user.defaultConfig.showConsumption,
+    refreshFrequency: state.user.defaultConfig.refreshFrequency
   };
 };
 

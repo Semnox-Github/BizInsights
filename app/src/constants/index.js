@@ -107,6 +107,11 @@ export const REGISTER_CLIENT = 'REGISTER_CLIENT';
 
 export const SET_SHOW_VERIFICATION_CODE = 'SET_SHOW_VERIFICATION_CODE';
 
+export const SET_SHOW_LOGIN_ID = 'SET_SHOW_LOGIN_ID';
+export const LOAD_STORED_DATA = 'LOAD_STORED_DATA';
+
+
+
 // boolean
 
 export const IS_DASH_BOARD = true;

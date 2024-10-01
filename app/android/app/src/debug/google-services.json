@@ -26,25 +26,6 @@
     },
     {
       "client_info": {
-        "mobilesdk_app_id": "1:313558004009:android:df001deb1f5db4fe8e0738",
-        "android_client_info": {
-          "package_name": "com.semnox.analyticsdashboardapp"
-        }
-      },
-      "oauth_client": [],
-      "api_key": [
-        {
-          "current_key": "AIzaSyCRs4ypQRrOPXLtjqYL9f9R6AK0VzjCo4Y"
-        }
-      ],
-      "services": {
-        "appinvite_service": {
-          "other_platform_oauth_client": []
-        }
-      }
-    },
-    {
-      "client_info": {
         "mobilesdk_app_id": "1:313558004009:android:c0bf2dc3cba3f59e8e0738",
         "android_client_info": {
           "package_name": "com.semnox.analyticsdashboardapplite"

@@ -1,5 +1,5 @@
 import React from 'react';
-import {Text, TouchableOpacity, StyleSheet, View} from 'react-native';
+import { Text, TouchableOpacity, StyleSheet, View } from 'react-native';
 // import NumberFormat from 'react-number-format';
 import NumberFormat from 'react-number-format';
 const DashboardActivityCard = ({
@@ -13,6 +13,7 @@ const DashboardActivityCard = ({
   thousandSeparator,
   decimalSeparator,
   decimalScale,
+  showConsumption
 }) => {
   return (
     <TouchableOpacity style={styles.container} onPress={onPress}>
@@ -37,24 +38,29 @@ const DashboardActivityCard = ({
           <View style={styles.lineView}></View>
           <Text style={styles.collectionText}>{collectionText}</Text>
         </View>
-        <View style={styles.collectionContainer}>
-          <NumberFormat
-            decimalScale={decimalScale}
-            value={consumptionAmt}
-            fixedDecimalScale={true}
-            displayType={'text'}
-            thousandSeparator={thousandSeparator}
-            decimalSeparator={decimalSeparator}
-            // prefix={currencySymbol}
-            renderText={(value) => (
-              <Text style={styles.collectionAmtText}>{value}</Text>
-            )}
-          />
-          {/* <Text style={styles.collectionAmtText}>{consumptionAmt}</Text> */}
-          <View style={styles.lineView}></View>
 
-          <Text style={styles.collectionText}>{consumptionText}</Text>
-        </View>
+        {showConsumption !== 'N' && (
+          <>
+            <View style={styles.collectionContainer}>
+              <NumberFormat
+                decimalScale={decimalScale}
+                value={consumptionAmt}
+                fixedDecimalScale={true}
+                displayType={'text'}
+                thousandSeparator={thousandSeparator}
+                decimalSeparator={decimalSeparator}
+                // prefix={currencySymbol}
+                renderText={(value) => (
+                  <Text style={styles.collectionAmtText}>{value}</Text>
+                )}
+              />
+              {/* <Text style={styles.collectionAmtText}>{consumptionAmt}</Text> */}
+              <View style={styles.lineView}></View>
+
+              <Text style={styles.collectionText}>{consumptionText}</Text>
+            </View>
+          </>
+        )}
       </View>
     </TouchableOpacity>
   );
@@ -148,4 +154,4 @@ export const styles = StyleSheet.create({
   },
 });
 
-export {DashboardActivityCard};
+export { DashboardActivityCard };

@@ -41,7 +41,9 @@ class RegestrationScreen extends Component {
     password: '',
     verificationCode: '',
     showVerificationCode: '',
-    isChecked: false,
+    showLoginId: '',
+    isverificationCodeChanged: false,
+    // isChecked: false,
     guId: null,
     gatewayURL: {},
     isMounted: true,
@@ -72,11 +74,11 @@ class RegestrationScreen extends Component {
     });
 
   };
-  onSelectCheckbox = () => {
-    this.setState({
-      isChecked: !this.state.isChecked,
-    });
-  };
+  // onSelectCheckbox = () => {
+  //   this.setState({
+  //     isChecked: !this.state.isChecked,
+  //   });
+  // };
 
   onClearButtonPress = () => {
     this.setState({
@@ -102,24 +104,29 @@ class RegestrationScreen extends Component {
         this.props.handleError(),
       );
     } else {
-      if (this.state.isChecked) {
-        asyncStorageHandler.setItem(Constants.SET_ON_CHECK, true);
-      }
+      // if (this.state.isChecked) {
+      //   asyncStorageHandler.setItem(Constants.SET_ON_CHECK, true);
+      // }
 
       if (
         Object.keys(this.props.clientGateway).length === 0 &&
         this.props.clientGateway.constructor === Object
       ) {
+        // this.setState({
+        //   isverificationCodeChanged: false
+        // });
+        console.log('getClientDetail');
+
         this.props.getClientDetail(
           this.state.loginId,
           this.state.password,
           this.state.verificationCode,
-          asyncStorageHandler.setItem(Constants.SET_SHOW_VERIFICATION_CODE, this.state.verificationCode),
-
-          // console.log('getClientDetailVerfication', this.state.verificationCode)
+          this.state.isverificationCodeChanged
         );
+        asyncStorageHandler.setItem(Constants.SET_SHOW_LOGIN_ID, this.state.loginId),
+          asyncStorageHandler.setItem(Constants.SET_SHOW_VERIFICATION_CODE, this.state.verificationCode)
       } else {
-        //console.log('helloHere');
+        console.log('helloHere');
         this.props.authenticateUser(this.state.loginId, this.state.password);
       }
     }
@@ -137,32 +144,48 @@ class RegestrationScreen extends Component {
         this.props.handleError(),
       );
     } else {
-      if (this.state.isChecked) {
-        asyncStorageHandler.setItem(Constants.SET_ON_CHECK, true);
-      }
+      // if (this.state.isChecked) {
+      //   asyncStorageHandler.setItem(Constants.SET_ON_CHECK, true);
+      // }
       // console.log('check1***', this.state.verificationCode);
       // console.log('check2***', this.state.showVerificationCode);
 
       //added by shobith
-      if (this.state.verificationCode === '') {
+      if (this.state.verificationCode === '' && this.state.loginId === '') {
+        console.log('cuehuehee1233');
+
         this.setState({
+          loginId: this.state.showLoginId,
           verificationCode: this.state.showVerificationCode,
         });
         this.props.authenticateUser(this.state.loginId, this.state.password);
 
       }
       else if (this.state.verificationCode !== this.state.showVerificationCode) {
-        this.props.getClientDetail(
-          this.state.loginId,
-          this.state.password,
-          this.state.verificationCode,
-          // asyncStorageHandler.setItem(Constants.SET_SHOW_VERIFICATION_CODE, this.state.verificationCode),
+        console.log('cuehuehee');
 
-          // console.log('getClientDetailVerficationAfterLoginChange', this.state.verificationCode)
-        );
+        this.setState({
+          isverificationCodeChanged: true
+        }, () => {
+          console.log('verificationCodeCHanged', this.state.isverificationCodeChanged);
+
+          this.props.getClientDetail(
+            this.state.loginId,
+            this.state.password,
+            this.state.verificationCode,
+            this.state.isverificationCodeChanged
+            // asyncStorageHandler.setItem(Constants.SET_SHOW_VERIFICATION_CODE, this.state.verificationCode),
+            // console.log('getClientDetailVerficationAfterLoginChange', this.state.verificationCode)
+          );
+        });
+        // asyncStorageHandler.setItem(Constants.SET_SHOW_VERIFICATION_CODE, this.state.verificationCode),
+
+        // console.log('getClientDetailVerficationAfterLoginChange', this.state.verificationCode)
+
       }
+
       else {
-        // console.log('justLogin');
+        console.log('justLogin');
         this.props.authenticateUser(this.state.loginId, this.state.password);
       }
       //this.props.intialSetUp( this.state.clientDTO, this.state.gatewayURL, this.state.loginId, this.state.password)
@@ -282,6 +305,18 @@ class RegestrationScreen extends Component {
 
   componentDidMount() {
     //added by shobith
+    asyncStorageHandler.getItem(Constants.SET_SHOW_LOGIN_ID)
+      .then((code) => {
+        if (code != null) {
+          this.setState({
+            showLoginId: code,
+            loginId: code
+
+          })
+
+        }
+      })
+
     asyncStorageHandler.getItem(Constants.SET_SHOW_VERIFICATION_CODE)
       .then((code) => {
         if (code != null) {
@@ -314,12 +349,8 @@ class RegestrationScreen extends Component {
                     .getItem(Constants.PASSWORD)
                     .then((password) => {
                       this.setState({
-                        loginId:
-                          checked == null || checked == 'false' ? '' : userId,
-                        password:
-                          checked == null || checked == 'false' ? '' : password,
-                        isChecked:
-                          checked == null || checked == 'false' ? false : true,
+                        loginId: userId,
+                        password: password,
                       });
                     })
                     .catch((error) => { }),
@@ -352,10 +383,10 @@ class RegestrationScreen extends Component {
             secureTextEntry={true}
           />
           {this.renderVerificationCode()}
-          <Checkbox
-            value={this.state.isChecked}
-            onValueChange={this.onSelectCheckbox}
-          />
+          {/* <Checkbox
+              value={this.state.isChecked}
+              onValueChange={this.onSelectCheckbox}
+            /> */}
           {this.renderButtons()}
         </View>
 
@@ -408,7 +439,7 @@ const mapStateToProps = (state) => {
     userDTO: state.user.clientAppUserLoginDTO,
     guId: state.user.deviceGUID,
     errorCode: state.ui.errorCode,
-    isChecked: state.user.isChecked,
+    // isChecked: state.user.isChecked,
     hideSecurityCode: state.user.hideSecurityCode,
   };
   // gives email state

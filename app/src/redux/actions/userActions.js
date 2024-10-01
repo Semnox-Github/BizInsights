@@ -71,7 +71,7 @@ export function authenticateUser(loginId, password) {
             // Alert.alert('UserPkId');
             // console.log('pkId', response.data.UserPKId);
             dispatch(setPushNotificationToken(null, response.data.UserPKId, config.APP_NAME));
-            dispatch();
+
 
             //asyncStorageHandler.setItem(Constants.LOGIN_DATE, response.data.userDTO.LastLoginTime.slice(8,10))
           } else {
@@ -471,54 +471,54 @@ export function signoutUser() {
   };
 }
 
-export function signoutAllUser() {
-  let val = store.getState().user.clientAppUserDTO;
-  return (dispatch, getState) => {
-    dispatch({ type: types.SIGN_OUT_USER_REQUEST });
-    ServiceHandler.post({
-      url: 'api/ClientApp/ClientAppUser/Logout',
-      headers: { queryParameters: { allDevices: true } },
-      data: store.getState().user.clientAppUserDTO,
-      timeout: ParafaitServer.DEFAULT_TIMEOUT,
-    })
-      .then((response) => {
-        try {
-          if (response instanceof Error) throw response;
-          if (response.statusCode === 200) {
-            dispatch({
-              type: types.SIGN_OUT_USER_SUCESS,
-            });
+// export function signoutAllUser() {
+//   let val = store.getState().user.clientAppUserDTO;
+//   return (dispatch, getState) => {
+//     dispatch({ type: types.SIGN_OUT_USER_REQUEST });
+//     ServiceHandler.post({
+//       url: 'api/ClientApp/ClientAppUser/Logout',
+//       headers: { queryParameters: { allDevices: true } },
+//       data: store.getState().user.clientAppUserDTO,
+//       timeout: ParafaitServer.DEFAULT_TIMEOUT,
+//     })
+//       .then((response) => {
+//         try {
+//           if (response instanceof Error) throw response;
+//           if (response.statusCode === 200) {
+//             dispatch({
+//               type: types.SIGN_OUT_USER_SUCESS,
+//             });
 
-            asyncStorageHandler.deleteItem(Constants.USER_ID);
-            asyncStorageHandler.deleteItem(Constants.PASSWORD);
-            asyncStorageHandler.deleteItem(Constants.SET_ON_CHECK);
-            dispatch({ type: types.CLEAR_TOKEN });
-            asyncStorageHandler.setItem(Constants.LOGIN_TOKEN, null);
-            NavigationService.reset({
-              index: 0,
-              actions: [NavigationService.navActions('RegestrationScreen')],
-            });
+//             asyncStorageHandler.deleteItem(Constants.USER_ID);
+//             asyncStorageHandler.deleteItem(Constants.PASSWORD);
+//             asyncStorageHandler.deleteItem(Constants.SET_ON_CHECK);
+//             dispatch({ type: types.CLEAR_TOKEN });
+//             asyncStorageHandler.setItem(Constants.LOGIN_TOKEN, null);
+//             NavigationService.reset({
+//               index: 0,
+//               actions: [NavigationService.navActions('RegestrationScreen')],
+//             });
 
-            // NavigationService.navigate('RegestrationScreen');
-          } else {
-            //dispatch({type:types.SET_ERROR_CODE, payload:response.statusCode})
-            dispatch({
-              type: types.SIGN_OUT_USER_FAILURE,
-              payload: new Error(
-                response?.data || Constants.UNKNOWN_ERROR_MESSAGE,
-              ),
-            });
-          }
-        } catch (error) {
-          dispatch({ type: types.SIGN_OUT_USER_FAILURE, payload: error });
-        }
-      })
-      .catch((error) => {
-        //dispatch({type:types.SET_ERROR_CODE, payload:ParafaitServer.ERROR_TYPES.REQUEST_TIMEOUT})
-        dispatch({ type: types.SIGN_OUT_USER_FAILURE, payload: error });
-      });
-  };
-}
+//             // NavigationService.navigate('RegestrationScreen');
+//           } else {
+//             //dispatch({type:types.SET_ERROR_CODE, payload:response.statusCode})
+//             dispatch({
+//               type: types.SIGN_OUT_USER_FAILURE,
+//               payload: new Error(
+//                 response?.data || Constants.UNKNOWN_ERROR_MESSAGE,
+//               ),
+//             });
+//           }
+//         } catch (error) {
+//           dispatch({ type: types.SIGN_OUT_USER_FAILURE, payload: error });
+//         }
+//       })
+//       .catch((error) => {
+//         //dispatch({type:types.SET_ERROR_CODE, payload:ParafaitServer.ERROR_TYPES.REQUEST_TIMEOUT})
+//         dispatch({ type: types.SIGN_OUT_USER_FAILURE, payload: error });
+//       });
+//   };
+// }
 
 export function getDefaultAppConfiguration(siteId) {
   //console.log('**************');
@@ -582,12 +582,17 @@ export function setDefaultAppConfiguration(defaultConfig) {
   var { decimalSeparator, thousandSeparator, decimalScale } = formatCurrency(
     defaultConfig?.AMOUNT_FORMAT,
   );
+  console.log('defaultConfig?.BIZINSIGHTS_AUTO_REFRESH_FREQUENCY', defaultConfig?.BIZINSIGHTS_AUTO_REFRESH_FREQUENCY);
+  console.log('defaultConfig?.BIZINSIGHTS_SHOW_CONSUMPTION', defaultConfig?.BIZINSIGHTS_AUTO_REFRESH_FREQUENCY);
+
   var obj = {
     currencySymbol: defaultConfig?.CURRENCY_SYMBOL || '$',
     amountFormat: defaultConfig?.AMOUNT_FORMAT || '#,##0.00',
     decimalSeparator: decimalSeparator,
     thousandSeparator: thousandSeparator,
     decimalScale: decimalScale,
+    refreshFrequency: defaultConfig?.BIZINSIGHTS_AUTO_REFRESH_FREQUENCY,
+    showConsumption: defaultConfig?.BIZINSIGHTS_SHOW_CONSUMPTION
   };
 
   return (dispatch, getState) => {

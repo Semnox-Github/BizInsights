@@ -14,6 +14,7 @@ const DashboardCollection = ({
   pastCollectionText,
   currentCollectionText,
   decimalScale,
+  showConsumption
 }) => {
   const renderPosMachines = ({ item }) => {
     const {
@@ -27,6 +28,9 @@ const DashboardCollection = ({
       CollectionWeek,
       CollectionPreviousWeek,
     } = item;
+
+    console.log('showConsumption', showConsumption);
+
     return (
       <View style={styles.posMachineContainer}>
         <Text style={styles.posMachineText}>{PosMachine}</Text>
@@ -134,22 +138,26 @@ const DashboardCollection = ({
               {Constants.COLLECTION}
             </Text>
             <View style={{ margin: 2.5 }}></View>
-            <NumberFormat
-              value={PastConsumption} //PastConsumption
-              fixedDecimalScale={true}
-              displayType={'text'}
-              thousandSeparator={thousandSeparator}
-              decimalSeparator={decimalSeparator}
-              decimalScale={decimalScale}
-              // prefix={currencySymbol}
-              renderText={(value) => (
-                <Text style={styles.siteCollectionText}>{value}</Text>
-              )}
-            />
-            {/* <Text style={styles.siteCollectionText}>{PastConsumption}</Text> */}
-            <Text style={styles.siteConsumptionText}>
-              {Constants.CONSUMPTION}
-            </Text>
+
+            {showConsumption !== 'N' && (
+              <>
+                <NumberFormat
+                  value={PastConsumption}
+                  fixedDecimalScale={true}
+                  displayType={'text'}
+                  thousandSeparator={thousandSeparator}
+                  decimalSeparator={decimalSeparator}
+                  decimalScale={decimalScale}
+                  renderText={(value) => (
+                    <Text style={styles.siteCollectionText}>{value}</Text>
+                  )}
+                />
+                <Text style={styles.siteConsumptionText}>
+                  {Constants.CONSUMPTION}
+                </Text>
+              </>
+            )}
+
           </View>
           <View
             style={[
@@ -175,22 +183,28 @@ const DashboardCollection = ({
               {Constants.COLLECTION}
             </Text>
             <View style={{ margin: 2.5 }}></View>
-            <NumberFormat
-              value={PresentConsumption}
-              fixedDecimalScale={true}
-              displayType={'text'}
-              thousandSeparator={thousandSeparator}
-              decimalSeparator={decimalSeparator}
-              decimalScale={decimalScale}
-              // prefix={currencySymbol}
-              renderText={(value) => (
-                <Text style={styles.siteCollectionText}>{value}</Text>
-              )}
-            />
-            {/* <Text style={styles.siteCollectionText}>{PresentConsumption}</Text> */}
-            <Text style={styles.siteConsumptionText}>
-              {Constants.CONSUMPTION}
-            </Text>
+
+            {showConsumption !== 'N' && (
+              <>
+                <NumberFormat
+                  value={PresentConsumption}
+                  fixedDecimalScale={true}
+                  displayType={'text'}
+                  thousandSeparator={thousandSeparator}
+                  decimalSeparator={decimalSeparator}
+                  decimalScale={decimalScale}
+                  // prefix={currencySymbol}
+                  renderText={(value) => (
+                    <Text style={styles.siteCollectionText}>{value}</Text>
+                  )}
+                />
+                {/* <Text style={styles.siteCollectionText}>{PresentConsumption}</Text> */}
+                <Text style={styles.siteConsumptionText}>
+                  {Constants.CONSUMPTION}
+                </Text>
+              </>
+
+            )}
           </View>
         </TouchableOpacity>
         {PosCollections?.length > 0 && siteId == SiteId ? (

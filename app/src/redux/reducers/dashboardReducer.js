@@ -87,6 +87,11 @@ export const dashboard = (state = initialState, action) => {
         ...state,
         totalCollection: action.payload,
       };
+    case types.CLEAR_DASHBOARD_DATA:
+      return {
+        ...state,
+        totalCollection: {},
+      };
     case types.FETCH_SALES_DASHBOARD_SUCCESS:
 
       return {

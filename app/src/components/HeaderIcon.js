@@ -113,9 +113,9 @@ const HeaderIcon = () => {
     dispatch(signoutUser());
   };
 
-  const handleSignoutAll = () => {
-    dispatch(signoutAllUser());
-  };
+  // const handleSignoutAll = () => {
+  //   dispatch(signoutAllUser());
+  // };
 
   _menu = null;
 
@@ -151,9 +151,9 @@ const HeaderIcon = () => {
         <MenuItem textStyle={{ fontSize: 4 * vw }} onPress={signout}>
           Sign out
         </MenuItem>
-        <MenuItem textStyle={{ fontSize: 4 * vw }} onPress={signoutAll}>
+        {/* <MenuItem textStyle={{ fontSize: 4 * vw }} onPress={signoutAll}>
           Sign out from all devices
-        </MenuItem>
+        </MenuItem> */}
         {/* <MenuItem onPress={hideMenu}>Settings</MenuItem> */}
       </Menu>
     </View>

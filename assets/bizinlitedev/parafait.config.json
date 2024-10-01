@@ -10,8 +10,8 @@
 	"MYAPP_RELEASE_KEY_ALIAS": "bizlite-key-alias",
 	"MYAPP_RELEASE_STORE_PASSWORD": "bizlite",
 	"MYAPP_RELEASE_KEY_PASSWORD": "bizlite",
-	"VERSION_CODE": 2155115,
-	"VERSION_NAME": "2.155.0.0",
+	"VERSION_CODE": 2155121,
+	"VERSION_NAME": "2.152.2",
 	"PLAY_STORE_URL": "https://play.google.com/store/apps/details?id=com.semnox.analyticsdashboardapplite",
 	"APP_STORE_URL": "https://itunes.apple.com/app/id1547246277",
 	"ISTABLEUDASHBOARD": "false"

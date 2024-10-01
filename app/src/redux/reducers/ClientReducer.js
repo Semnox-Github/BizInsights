@@ -6,6 +6,7 @@ let initialState = {
   deprecated: '',
   securityCode: null,
   lastClientUpdated: null,
+  isVerificationCodeChanged: false
 };
 export const client = (state = initialState, action) => {
   switch (action.type) {
@@ -19,6 +20,15 @@ export const client = (state = initialState, action) => {
         ...state,
         clientGateway: action.payload,
       };
+
+    case types.IS_VERIFICATION_CODE_CHANGED:
+      console.log('isVerificationCodeChangedINreducer', action.payload);
+
+      return {
+        ...state,
+        isVerificationCodeChanged: action.payload,
+      };
+
     case types.SET_SECURITY_CODE:
       return {
         ...state,

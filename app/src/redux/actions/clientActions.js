@@ -11,7 +11,7 @@ import { config } from '../../constants/parafaitConfig';
 
 var asyncStorageHandler = new AsyncStorageHanlder();
 
-export const getClientDetail = (userId, password, securitycode) => {
+export const getClientDetail = (userId, password, securitycode, isVerificationCodeChanged) => {
   return (dispatch, getState) => {
 
     var securityCode = securitycode.slice(-2);
@@ -53,6 +53,7 @@ export const getClientDetail = (userId, password, securitycode) => {
                 userId,
                 password,
                 securitycode,
+                isVerificationCodeChanged
               ),
             );
           } else {
@@ -77,7 +78,9 @@ export const getClientDetail = (userId, password, securitycode) => {
   };
 };
 
-export function setClientData(clientData, userId, password, securityCode) {
+export function setClientData(clientData, userId, password, securityCode, isVerificationCodeChanged) {
+  console.log('isVerificationCodeChangedINSIDE_CLIENTACTION', isVerificationCodeChanged);
+
   return (dispatch, getState) => {
     asyncStorageHandler.setItem(Constants.CLIENT_DTO, clientData);
     asyncStorageHandler.setItem(Constants.GATEWAY_URL, clientData.GateWayURL); //clientData.GateWayURL
@@ -85,8 +88,17 @@ export function setClientData(clientData, userId, password, securityCode) {
     dispatch({ type: types.FETCH_CLIENT_DETAILS_SUCCESS, payload: clientData });
     dispatch({ type: types.SET_CLIENT_GATEWAY, payload: clientData.GateWayURL }); //clientData.GateWayURL
     dispatch({ type: types.SET_SECURITY_CODE, payload: securityCode });
-    //  console.log('chceksecurity', securityCode);
+    if (securityCode) {
+      dispatch({
 
+        type: types.CLEAR_DASHBOARD_DATA,
+        payload: {},
+      })
+      asyncStorageHandler.setItem(Constants.LOAD_STORED_DATA, null);
+      dispatch({ type: types.IS_VERIFICATION_CODE_CHANGED, payload: false });
+    }
+
+    //  console.log('chceksecurity', securityCode);
     dispatch(authenticateUser(userId, password));
   };
 }

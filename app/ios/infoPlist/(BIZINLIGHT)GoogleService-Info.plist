@@ -26,5 +26,9 @@
 	<true/>
 	<key>GOOGLE_APP_ID</key>
 	<string>1:313558004009:ios:9a625988bbd3bd898e0738</string>
+	<key>UISupportedInterfaceOrientations</key>
+    <array>
+        <string>UIInterfaceOrientationPortrait</string>
+    </array>
 </dict>
 </plist>
